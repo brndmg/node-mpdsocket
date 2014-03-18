@@ -19,6 +19,11 @@ function mpdSocket(host,port) {
 	this.open(this.host,this.port);
 }
 
+var log = function(){
+
+	//console.log.apply(this, Array.prototype.slice.call(arguments) );
+};
+
 mpdSocket.prototype = {
 	callbacks: [],
 	commands: [],
@@ -34,8 +39,11 @@ mpdSocket.prototype = {
 	handleData: function(datum) {
 		this.data += datum;
 		lines = this.data.split("\n");
+		this.responses = [];
+		this.response = {};
 		// Put back whatever's after the final \n for next time
 		this.data = lines.pop(); 
+		if(this.data.length > 0) log('DATA: %s', this.data);
 
 		var match;
 		for (var l in lines) {
@@ -43,14 +51,13 @@ mpdSocket.prototype = {
 
 			if (match = line.match(/^ACK\s+\[.*?\](?:\s+\{.*?\})?\s+(.*)/)) {
 				this.callbacks.shift()(match[1], null);
-				this.response = {};
-				this.responses = [];
 			}
 			else if (line.match(/^OK MPD/)) {
 				this.version = lines[l].split(' ')[2];
+
 			}
 			else if (line.match(/^OK/)) {
-				if (this.responses.length > 0) {
+				if (this.responses.length > 0 || this.response.hasOwnProperty('file')) {
 					if (typeof(this.response) == 'string' || Object.keys(this.response).length > 0) {
 						this.responses.push(this.response);
 					}
@@ -59,10 +66,9 @@ mpdSocket.prototype = {
 				else {
 					this.callbacks.shift()(null, this.response);
 				}
-				this.response = {};
-				this.responses = [];
 			}
 			else {
+				log("LINE[%s of %s]: %s", l, lines.length, line);
 				// Matches 'key: val' or 'val'
 				match = line.match(/^(?:(.*?):)?\s*(.*?)\s*$/)
 				var key = match[1];
