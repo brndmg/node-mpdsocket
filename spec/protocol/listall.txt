@@ -1,0 +1,222 @@
+directory: Daft Punk
+directory: Daft Punk/1997 - Homework
+file: Daft Punk/1997 - Homework/01 - Daftendirekt.mp3
+file: Daft Punk/1997 - Homework/02 - Wdpk 83.7 fm.mp3
+file: Daft Punk/1997 - Homework/03 - Revolution 909.mp3
+file: Daft Punk/1997 - Homework/04 - Da Funk.mp3
+file: Daft Punk/1997 - Homework/05 - Phoenix.mp3
+file: Daft Punk/1997 - Homework/06 - Fresh.mp3
+file: Daft Punk/1997 - Homework/07 - Around the World.mp3
+file: Daft Punk/1997 - Homework/08 - Rollin' & Scratchin'.mp3
+file: Daft Punk/1997 - Homework/09 - Teachers.mp3
+file: Daft Punk/1997 - Homework/10 - High Fidelity.mp3
+file: Daft Punk/1997 - Homework/11 - Rock'n Roll.mp3
+file: Daft Punk/1997 - Homework/12 - Oh Yeah.mp3
+file: Daft Punk/1997 - Homework/13 - Burnin'.mp3
+file: Daft Punk/1997 - Homework/14 - Indo Silver Club.mp3
+file: Daft Punk/1997 - Homework/15 - Alive.mp3
+file: Daft Punk/1997 - Homework/16 - Funk Ad.mp3
+directory: Daft Punk/2001 - Discovery
+file: Daft Punk/2001 - Discovery/01 - One More Time.mp3
+file: Daft Punk/2001 - Discovery/02 - Aerodynamic.mp3
+file: Daft Punk/2001 - Discovery/03 - Digital Love.mp3
+file: Daft Punk/2001 - Discovery/04 - Harder, Better, Faster, Stronger.mp3
+file: Daft Punk/2001 - Discovery/05 - Crescendolls.mp3
+file: Daft Punk/2001 - Discovery/06 - Nightvision.mp3
+file: Daft Punk/2001 - Discovery/07 - Superheroes.mp3
+file: Daft Punk/2001 - Discovery/08 - High Life.mp3
+file: Daft Punk/2001 - Discovery/09 - Something About Us.mp3
+file: Daft Punk/2001 - Discovery/10 - Voyager.mp3
+file: Daft Punk/2001 - Discovery/11 - Veridis Quo.mp3
+file: Daft Punk/2001 - Discovery/12 - Short Circuit.mp3
+file: Daft Punk/2001 - Discovery/13 - Face to Face.mp3
+file: Daft Punk/2001 - Discovery/14 - Too Long.mp3
+directory: Daft Punk/2005 - Human After All
+file: Daft Punk/2005 - Human After All/01 - Human After All.mp3
+file: Daft Punk/2005 - Human After All/02 - The Prime Time of Your Life.mp3
+file: Daft Punk/2005 - Human After All/03 - Robot Rock.mp3
+file: Daft Punk/2005 - Human After All/04 - Steam Machine.mp3
+file: Daft Punk/2005 - Human After All/05 - Make Love.mp3
+file: Daft Punk/2005 - Human After All/06 - The Brainwasher.mp3
+file: Daft Punk/2005 - Human After All/07 - On,Off.mp3
+file: Daft Punk/2005 - Human After All/08 - Television Rules the Nation.mp3
+file: Daft Punk/2005 - Human After All/09 - Technologic.mp3
+file: Daft Punk/2005 - Human After All/10 - Emotion.mp3
+directory: Daft Punk/2013 - Random Access Memories
+file: Daft Punk/2013 - Random Access Memories/Daft Punk - Give Life Back to Music.mp3
+file: Daft Punk/2013 - Random Access Memories/Daft Punk - The Game of Love.mp3
+file: Daft Punk/2013 - Random Access Memories/Daft Punk - Giorgio by Moroder.mp3
+file: Daft Punk/2013 - Random Access Memories/Daft Punk - Within.mp3
+file: Daft Punk/2013 - Random Access Memories/Daft Punk Feat Julian Casablancas - Instant Crush.mp3
+file: Daft Punk/2013 - Random Access Memories/Daft Punk Feat Pharrell Williams - Lose Yourself to Dance.mp3
+file: Daft Punk/2013 - Random Access Memories/Daft Punk Feat Paul Williams - Touch.mp3
+file: Daft Punk/2013 - Random Access Memories/Daft Punk Feat Pharrell Williams - Get Lucky.mp3
+file: Daft Punk/2013 - Random Access Memories/Daft Punk - Beyond.mp3
+file: Daft Punk/2013 - Random Access Memories/Daft Punk - Motherboard.mp3
+file: Daft Punk/2013 - Random Access Memories/Daft Punk Feat Todd Edwards - Fragments of Time.mp3
+file: Daft Punk/2013 - Random Access Memories/Daft Punk Feat Panda Bear - Doin' It Right.mp3
+file: Daft Punk/2013 - Random Access Memories/Daft Punk - Contact.mp3
+directory: Deadmau5
+directory: Deadmau5/At Play
+file: Deadmau5/At Play/01 Vanishing Point.mp3
+file: Deadmau5/At Play/02 Sex Lies Audiotape.mp3
+file: Deadmau5/At Play/03 Cocktail Queen.mp3
+file: Deadmau5/At Play/04 Faxing Berlin.mp3
+file: Deadmau5/At Play/05 Hey Baby (Adam K Dirty Remix).mp3
+file: Deadmau5/At Play/06 Turning Point.mp3
+file: Deadmau5/At Play/07 This Is The Hook.mp3
+file: Deadmau5/At Play/08 1981.mp3
+file: Deadmau5/At Play/09 Dr. Funkenstein.mp3
+file: Deadmau5/At Play/10 Afterhours.mp3
+directory: Deadmau5/At Play 2
+file: Deadmau5/At Play 2/01 Outta My Life (Touch Mix).mp3
+file: Deadmau5/At Play 2/02 Attention Whore.mp3
+file: Deadmau5/At Play 2/03 Mr. G.mp3
+file: Deadmau5/At Play 2/04 Reduction.mp3
+file: Deadmau5/At Play 2/05 This Is Also The Hook.mp3
+file: Deadmau5/At Play 2/06 Orca.mp3
+file: Deadmau5/At Play 2/07 Tau v2.mp3
+file: Deadmau5/At Play 2/08 Sexslave.mp3
+file: Deadmau5/At Play 2/09 This Noise.mp3
+file: Deadmau5/At Play 2/10 R My Dreams.mp3
+directory: Deadmau5/For Lack of a Better Name
+file: Deadmau5/For Lack of a Better Name/01 FML.mp3
+file: Deadmau5/For Lack of a Better Name/02 Moar Ghosts N Stuff.mp3
+file: Deadmau5/For Lack of a Better Name/03 Ghosts 'n Stuff (feat. Rob Swire).mp3
+file: Deadmau5/For Lack of a Better Name/04 Hi Friend!.mp3
+file: Deadmau5/For Lack of a Better Name/05 Bot.mp3
+file: Deadmau5/For Lack of a Better Name/06 Word Problems.mp3
+file: Deadmau5/For Lack of a Better Name/07 Soma.mp3
+file: Deadmau5/For Lack of a Better Name/08 Lack of a Better Name.mp3
+file: Deadmau5/For Lack of a Better Name/09 The 16th Hour.mp3
+file: Deadmau5/For Lack of a Better Name/10 Strobe.mp3
+directory: Deadmau5/Full Circle
+file: Deadmau5/Full Circle/07 Subvert (Original Mix).mp3
+file: Deadmau5/Full Circle/01 Turning Point (Original Mix).mp3
+file: Deadmau5/Full Circle/02 Mr. G (Original Mix).mp3
+file: Deadmau5/Full Circle/03 1981 (Adam K Remix).mp3
+file: Deadmau5/Full Circle/04 1981 (Miminal Remix).mp3
+file: Deadmau5/Full Circle/05 Cyclic Redundancy (Original Mix).mp3
+file: Deadmau5/Full Circle/06 Templar (Original Mix).mp3
+directory: Deadmau5/Get Scraped
+file: Deadmau5/Get Scraped/01 The Oshawa Connection.mp3
+file: Deadmau5/Get Scraped/02 Intelstat.mp3
+file: Deadmau5/Get Scraped/03 Careless.mp3
+file: Deadmau5/Get Scraped/04 Unspecial Effects.mp3
+file: Deadmau5/Get Scraped/05 Waking Up From The American Dream.mp3
+file: Deadmau5/Get Scraped/06 I Forget.mp3
+file: Deadmau5/Get Scraped/07 Try Again.mp3
+file: Deadmau5/Get Scraped/08 8bit.mp3
+file: Deadmau5/Get Scraped/09 Overdraft.mp3
+file: Deadmau5/Get Scraped/10 Bored Of Canada.mp3
+file: Deadmau5/Get Scraped/11 Support.mp3
+file: Deadmau5/Get Scraped/12 Edit Your Friends.mp3
+file: Deadmau5/Get Scraped/13 Satisfaction.mp3
+file: Deadmau5/Get Scraped/14 Sometimes I Fail.mp3
+file: Deadmau5/Get Scraped/15 Careless (Acoustic).mp3
+directory: Deadmau5/It Sounds Like
+file: Deadmau5/It Sounds Like/01 Alone With You (Original Mix).mp3
+file: Deadmau5/It Sounds Like/02 Arguru (EDXs 5un5hine Remix).mp3
+file: Deadmau5/It Sounds Like/03 Bye Friend (Original Mix).mp3
+file: Deadmau5/It Sounds Like/04 Clockwork (Original Mix).mp3
+file: Deadmau5/It Sounds Like/05 Complications (Original Mix).mp3
+file: Deadmau5/It Sounds Like/06 Everything After (Original Mix).mp3
+file: Deadmau5/It Sounds Like/07 Everything Before (Original Mix).mp3
+file: Deadmau5/It Sounds Like/08 Faxing Berlin (Original Mix).mp3
+file: Deadmau5/It Sounds Like/09 Ghosts N Stuff (Original Mix).mp3
+file: Deadmau5/It Sounds Like/10 Hi Friend (feat. Mc Flipside) (Instrumental Mix).mp3
+file: Deadmau5/It Sounds Like/11 Hi Friend (feat. Mc Flipside) (Vocal Mix).mp3
+file: Deadmau5/It Sounds Like/12 I Remember (Vocal Mix).mp3
+file: Deadmau5/It Sounds Like/13 Jaded (Original Mix).mp3
+file: Deadmau5/It Sounds Like/14 Not Exactly (Original Mix).mp3
+file: Deadmau5/It Sounds Like/15 Secondary Complications (Original Mix).mp3
+file: Deadmau5/It Sounds Like/16 Slip (Original Mix).mp3
+file: Deadmau5/It Sounds Like/17 Some Kind of Blue (Original Mix).mp3
+file: Deadmau5/It Sounds Like/18 We Fail (Original Mix).mp3
+file: Deadmau5/It Sounds Like/19 I Remember (Instrumental Mix).mp3
+directory: Deadmau5/Random Album Title
+file: Deadmau5/Random Album Title/01 Sometimes Things Get, Whatever.mp3
+file: Deadmau5/Random Album Title/02 Complications.mp3
+file: Deadmau5/Random Album Title/03 Slip.mp3
+file: Deadmau5/Random Album Title/04 Some Kind of Blue.mp3
+file: Deadmau5/Random Album Title/05 Brazil (2nd Edit).mp3
+file: Deadmau5/Random Album Title/06 Alone With You.mp3
+file: Deadmau5/Random Album Title/07 I Remember.mp3
+file: Deadmau5/Random Album Title/08 Faxing Berlin.mp3
+file: Deadmau5/Random Album Title/09 Faxing Berlin (Instrumental).mp3
+file: Deadmau5/Random Album Title/10 Not Exactly.mp3
+file: Deadmau5/Random Album Title/11 Arguru.mp3
+file: Deadmau5/Random Album Title/12 So There I Was.mp3
+directory: Deadmau5/Vexillology
+file: Deadmau5/Vexillology/01 1981.mp3
+file: Deadmau5/Vexillology/02 Bounce.mp3
+file: Deadmau5/Vexillology/03 Drfunkenstein.mp3
+file: Deadmau5/Vexillology/04 Fustercluck.mp3
+file: Deadmau5/Vexillology/05 Lai.mp3
+file: Deadmau5/Vexillology/06 Orca.mp3
+file: Deadmau5/Vexillology/07 Plus.mp3
+file: Deadmau5/Vexillology/08 Apply Overnight.mp3
+file: Deadmau5/Vexillology/09 Tl7.mp3
+file: Deadmau5/Vexillology/10 Trepid.mp3
+directory: Skrillex
+directory: Skrillex/Avicii - Levels (Skrillex Remix)
+file: Skrillex/Avicii - Levels (Skrillex Remix)/02 Levels (Skrillex Remix).mp3
+directory: Skrillex/Benny Benassi - Cinema (Skrillex Remix) [feat. Gary Go]
+file: Skrillex/Benny Benassi - Cinema (Skrillex Remix) [feat. Gary Go]/02 Cinema (Skrillex Remix) [feat. Gary Go].mp3
+directory: Skrillex/Foreign Beggars - Still Getting It (feat. Skrillex)
+file: Skrillex/Foreign Beggars - Still Getting It (feat. Skrillex)/01 Still Getting It (feat. Skrillex).mp3
+directory: Skrillex/i SQUARE - Hey Sexy Lady (Skrillex Remix)
+file: Skrillex/i SQUARE - Hey Sexy Lady (Skrillex Remix)/02 Hey Sexy Lady.mp3
+directory: Skrillex/Kaskade & Skrillex - Lick It (Kaz James Remix)
+file: Skrillex/Kaskade & Skrillex - Lick It (Kaz James Remix)/01 Lick It (Kaz James Remix).mp3
+directory: Skrillex/Kaskade & Skrillex - Lick It (Remixes) - EP
+file: Skrillex/Kaskade & Skrillex - Lick It (Remixes) - EP/01 Lick It (Extended).mp3
+file: Skrillex/Kaskade & Skrillex - Lick It (Remixes) - EP/02 Lick It (Datsik Remix).mp3
+file: Skrillex/Kaskade & Skrillex - Lick It (Remixes) - EP/03 Lick It (Alex Kenji Remix).mp3
+file: Skrillex/Kaskade & Skrillex - Lick It (Remixes) - EP/04 Lick It (Norman Doray Remix).mp3
+directory: Skrillex/Korn - Chaos Lives In Everything (feat. Skrillex)
+file: Skrillex/Korn - Chaos Lives In Everything (feat. Skrillex)/01 Chaos Lives In Everything (feat.mp3
+directory: Skrillex/Korn - Get Up (feat. Skrillex)
+file: Skrillex/Korn - Get Up (feat. Skrillex)/01 Get Up! (feat. Skrillex).mp3
+directory: Skrillex/Korn - Narcissistic Cannibal (feat. Skrillex & Kill the Noise)
+file: Skrillex/Korn - Narcissistic Cannibal (feat. Skrillex & Kill the Noise)/01 Narcissistic Cannibal (feat. Skri.mp3
+directory: Skrillex/Nero - Promises (Skrillex & Nero Remix)
+file: Skrillex/Nero - Promises (Skrillex & Nero Remix)/02 Promises (Skrillex & Nero Remix).mp3
+directory: Skrillex/Sebastian - Love In Motion (feat. Mayer Hawthorne) [Skrillex's Funkt-Out Mix]
+file: Skrillex/Sebastian - Love In Motion (feat. Mayer Hawthorne) [Skrillex's Funkt-Out Mix]/05 Love In Motion (feat. Mayer Hawthorne) [Skrillex's Funkt-Out Mix].mp3
+directory: Skrillex/Skrillex - Bangarang
+file: Skrillex/Skrillex - Bangarang/01 Right In.mp3
+file: Skrillex/Skrillex - Bangarang/02 Bangarang (feat. Sirah).mp3
+file: Skrillex/Skrillex - Bangarang/03 Breakn' a Sweat.mp3
+file: Skrillex/Skrillex - Bangarang/04 The Devil's Den.mp3
+file: Skrillex/Skrillex - Bangarang/05 Right On Time.mp3
+file: Skrillex/Skrillex - Bangarang/06 Kyoto (feat. Sirah).mp3
+file: Skrillex/Skrillex - Bangarang/07 Summit (feat. Ellie Goulding).mp3
+file: Skrillex/Skrillex - Bangarang/08 Skrillex Orchestral Suite By Vari.mp3
+directory: Skrillex/Skrillex & Damian Jr. Gong Marley - Make It Bund Dem
+file: Skrillex/Skrillex & Damian Jr. Gong Marley - Make It Bund Dem/01 Make It Bun Dem.mp3
+directory: Skrillex/Skrillex - More Monsters and Sprites
+file: Skrillex/Skrillex - More Monsters and Sprites/01 First of the Year (Equinox).mp3
+file: Skrillex/Skrillex - More Monsters and Sprites/02 Ruffneck (Flex).mp3
+file: Skrillex/Skrillex - More Monsters and Sprites/03 Ruffneck (FULL Flex).mp3
+file: Skrillex/Skrillex - More Monsters and Sprites/04 Scary Monsters and Nice Sprites (.mp3
+file: Skrillex/Skrillex - More Monsters and Sprites/05 Scary Monsters and Nice Sprites (.mp3
+file: Skrillex/Skrillex - More Monsters and Sprites/06 Scary Monsters and Nice Sprites (.mp3
+file: Skrillex/Skrillex - More Monsters and Sprites/07 Scary Monsters and Nice Sprites (.mp3
+directory: Skrillex/Skrillex - Reptile's Theme
+file: Skrillex/Skrillex - Reptile's Theme/01 Reptile's Theme.mp3
+directory: Skrillex/Skrillex - Scary Monsters and Nice Sprites
+file: Skrillex/Skrillex - Scary Monsters and Nice Sprites/01 Rock 'n' Roll (Will Take You to t.mp3
+file: Skrillex/Skrillex - Scary Monsters and Nice Sprites/02 Scary Monsters and Nice Sprites.mp3
+file: Skrillex/Skrillex - Scary Monsters and Nice Sprites/03 Kill Everybody.mp3
+file: Skrillex/Skrillex - Scary Monsters and Nice Sprites/04 All I Ask of You (feat. Penny).mp3
+file: Skrillex/Skrillex - Scary Monsters and Nice Sprites/05 Scatta (feat. Foreign Beggars & B.mp3
+file: Skrillex/Skrillex - Scary Monsters and Nice Sprites/06 With You, Friends (Long Drive).mp3
+file: Skrillex/Skrillex - Scary Monsters and Nice Sprites/07 Scary Monsters and Nice Sprites (.mp3
+file: Skrillex/Skrillex - Scary Monsters and Nice Sprites/08 Scary Monsters and Nice Sprites (.mp3
+file: Skrillex/Skrillex - Scary Monsters and Nice Sprites/09 Kill Everybody (Bare Noize Remix).mp3
+directory: Skrillex/Skrillex & The Doors - Breakn' a Sweat (Zedd Remix)
+file: Skrillex/Skrillex & The Doors - Breakn' a Sweat (Zedd Remix)/01 Breakn a Sweat (Zedd Remix).mp3
+directory: Skrillex/Skrillex - Weekends!!! (feat. Sirah)
+file: Skrillex/Skrillex - Weekends!!! (feat. Sirah)/01 Weekends!!!.mp3
+OK

@@ -29,7 +29,7 @@ describe('mpd', function(){
     } catch(e) {}
   });
 
-  it('should connect', function(done){
+  it('should connect and get the version number', function(done){
     var serverConnected = false;
     var clientConnected = false;
     server.on('connection', function(s) {
@@ -49,5 +49,8 @@ describe('mpd', function(){
       done();
     }, 10);
   });
+
+
+
 
 });
