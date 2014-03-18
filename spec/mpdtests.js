@@ -29,11 +29,7 @@ describe('mpd', function(){
           command = command.split(' ')[0];
 
         if(simulations[command]){
-          //console.log('command... %s', command);
-          //console.log(simulations[command]);
-          //console.log('writing...end');
           s.write(simulations[command]);
-          //console.log('writing %s...end', simulations[command].length);
         }
       });
     });
@@ -116,7 +112,6 @@ describe('mpd', function(){
     socket.send('playlistinfo', function(err, result){
       if(err) console.log(err);
 
-      //console.log(result);
       assert.equal(result.length, 2);
       assert.equal(result[0].volume, undefined);
       done();
@@ -132,11 +127,12 @@ describe('mpd', function(){
       if(err) console.log(err);
 
       var directories = result.filter(function(item){
-        return item.hasOwnProperty('directory') && !item.hasOwnProperty('file');
+        return item.hasOwnProperty('directory') 
+          && !item.hasOwnProperty('file');
       });
 
       assert.equal(directories.length, 33);
-      //assert.equal(result.length, 189);
+      assert.equal(result.length, 221);
       assert.equal(result[0].volume, undefined);
       done();
     });
@@ -150,7 +146,6 @@ describe('mpd', function(){
     socket.send('search artist skrillex', function(err, result){
       if(err) console.log(err);
 
-      //console.log(result);
       assert.equal(result.length, 33);
       assert.equal(result[0].volume, undefined);
       done();
