@@ -13,18 +13,9 @@ var net = require('net');
 var sys = require('sys');
 
 function mpdSocket(host,port) {
-	if (!host) { 
-		this.host = "localhost";
-	} else {
-		this.host = host;
-	}
-
-	if (!port){
-		this.port = 6600;
-	} else {
-		this.port = port;
-	}
-
+		this.host = host || "localhost";
+		this.port = port || 6600;
+	
 	this.open(this.host,this.port);
 }
 
