@@ -11,5 +11,12 @@
   },
   "engines": {
     "node": "*"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha  spec/**/*.js"
+  },
+  "devDependencies": {
+    "chai": "^1.9.0",
+    "mocha": "^1.18.2"
   }
 }
