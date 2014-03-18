@@ -75,13 +75,24 @@ mpdSocket.prototype = {
 				var value = match[2];
 				
 				// New response if old response was a string or had this key defined already
-				if (typeof(this.response) == 'string' || typeof(this.response[key]) != 'undefined') {
+				if (typeof(this.response) == 'string' 
+					|| typeof(this.response[key]) != 'undefined') {
 					this.responses.push(this.response);
 					this.response = {};
 				}
 				
 				if (typeof(key) == 'undefined') {
 					this.response = value;
+				}else if(key == 'directory') {
+					//push the old entry if it is not empty
+					if(Object.keys(this.response).length > 0){
+						this.responses.push(this.response);
+						this.response = {};	
+					}
+					this.response[key] = value;
+					//push the directory entry
+					this.responses.push(this.response);
+					this.response = {};
 				}
 				else {
 					this.response[key] = value;

@@ -16,10 +16,10 @@ describe.skip('integration test', function(){
 
       });
 
-      mpd.send('playlistinfo', function(err, res){
-        console.log(res[0]);
+      mpd.send('listall', function(err, res){
+        console.log(res);
         
-        var result = res.map(function(item){
+        var result = res.filter(function(item){ return item.hasOwnProperty('file');}).map(function(item){
           item.url = encodeURIComponent(item.file);
           return item;
         });
@@ -27,6 +27,8 @@ describe.skip('integration test', function(){
         result.forEach(function(item){
           assert.equal(item.file, decodeURIComponent(item.url));
         });
+
+        //console.log(result[1]);
 
         done();
       });

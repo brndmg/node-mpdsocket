@@ -131,8 +131,12 @@ describe('mpd', function(){
     socket.send('listall', function(err, result){
       if(err) console.log(err);
 
-      //console.log(result);
-      assert.equal(result.length, 189);
+      var directories = result.filter(function(item){
+        return item.hasOwnProperty('directory') && !item.hasOwnProperty('file');
+      });
+
+      assert.equal(directories.length, 33);
+      //assert.equal(result.length, 189);
       assert.equal(result[0].volume, undefined);
       done();
     });
