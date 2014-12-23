@@ -153,7 +153,7 @@ describe('mpd', function() {
 
   });
 
-  it.only('should be able to listall', function(done) {
+  it('should be able to listall', function(done) {
     simulate('listall');
 
     socket = new mpdSocket('localhost', port);
