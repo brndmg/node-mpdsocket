@@ -7,7 +7,7 @@ var assert = require('assert'),
   mpdBuffer = require('../lib/mpdbuffer');
 
 
-describe('general', function() {
+describe('mpd buffer', function() {
 
   var port = 4991;
   var host = 'localhost';

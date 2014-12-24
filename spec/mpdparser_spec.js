@@ -7,7 +7,7 @@ var assert = require('assert'),
   mpdParser = require('../lib/mpdparser');
 
 
-describe.only('parser', function() {
+describe('mpd parser', function() {
 
   it('parses current song as object', function() {
     var command = 'currentsong';
@@ -128,11 +128,16 @@ describe.only('parser', function() {
 
     var result = mpdParser.parse(command, buffer);
 
-    console.log(result);
+    //console.log(result);
 
-    assert.isObject(result);
-    assert.property(result, 'playtime');
-    assert.property(result, 'songs');
+    assert.isArray(result);
+    assert.equal(result.length, 7);
+    assert.property(result[0], 'plugin');
+    assert.property(result[0], 'suffix');
+    assert.property(result[0], 'mime_type');
+    assert.isArray(result[0].suffix);
+    assert.isArray(result[0].mime_type);
+
   });
 
 });

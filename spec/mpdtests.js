@@ -7,7 +7,7 @@ var assert = require('assert'),
   mpdSocket = require('../mpdsocket');
 
 
-describe('mpd', function() {
+describe('mpd socket', function() {
   var port = 4990;
   var host = 'localhost';
 
