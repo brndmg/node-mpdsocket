@@ -9,6 +9,20 @@ var assert = require('assert'),
 
 describe('mpd parser', function() {
 
+  it('parses an error message', function(){
+    var command = 'songdoesnotexist';
+    var buffer = protocol[command];
+    var result = mpdParser.parseError(buffer);
+
+    assert.deepEqual(result, {
+      code: '50',
+      command: 'play',
+      command_list_num: '1',
+      message: 'song doesn\'t exist: "10240"',
+      original: "ACK [50@1] {play} song doesn't exist: \"10240\"\n"
+    });
+  });
+
   it('parses current song as object', function() {
     var command = 'currentsong';
     var buffer = protocol[command];
@@ -96,8 +110,6 @@ describe('mpd parser', function() {
     var command = 'count_genre_Dance';
     var buffer = protocol[command];
 
-    //console.log(buffer);
-
     var result = mpdParser.parse(command, buffer);
 
     //console.log(result);
@@ -138,6 +150,34 @@ describe('mpd parser', function() {
     assert.isArray(result[0].suffix);
     assert.isArray(result[0].mime_type);
 
+  });
+
+  it('parses a listall reponse with directories', function() {
+    var command = 'listall';
+    var buffer = protocol[command];
+    var result = mpdParser.parse(command, buffer);
+
+    assert.isArray(result);
+    assert.equal(result.length, 33); //33 directories
+
+    //reduce to just files
+    var files = result.reduce(function(acc, curr){
+      //console.log(acc);
+      if(curr.hasOwnProperty('file'))
+        acc = acc.concat(curr['file']);
+      return acc;
+    }, []);
+
+    //reduce to just directories
+    var directories = result.reduce(function(acc, curr){
+      //console.log(acc);
+      if(curr.hasOwnProperty('directory'))
+        acc.push(curr['directory']);
+      return acc;
+    }, []);
+
+    assert.equal(files.length, 188);
+    assert.equal(directories.length, 33);
   });
 
 });

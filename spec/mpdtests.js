@@ -37,7 +37,8 @@ describe('mpd socket', function() {
           //console.log('received: %s', command);
           if (simulations[command]) {
             var sleep = simulations[command].sleep;
-            var response = simulations[command].data;
+            var response = simulations[command].data; 
+            //console.log(response);
 
             setTimeout(function() {
               s.write(response);
@@ -135,7 +136,7 @@ describe('mpd socket', function() {
     });
   });
 
-  it.skip('can get an empty playlist', function(done) {
+  it('can get an empty playlist', function(done) {
     simulate('playlistinfo', 'noresults');
 
     socket = new mpdSocket('localhost', port);
@@ -143,11 +144,8 @@ describe('mpd socket', function() {
     socket.send('playlistinfo', function(err, result) {
       if (err) console.log(err);
 
-      console.log(result);
-
       assert.isArray(result, 'result is not an array');
       assert.equal(result.length, 0);
-      assert.equal(result[0].volume, undefined);
       done();
     });
 
@@ -160,15 +158,8 @@ describe('mpd socket', function() {
 
     socket.send('listall', function(err, result) {
       if (err) console.log(err);
-
-      var directories = result.filter(function(item) {
-        return item.hasOwnProperty('directory') && !item.hasOwnProperty('file');
-      });
-
-      //console.log(result);
-
-      assert.equal(directories.length, 33);
-      assert.equal(result.length, 221);
+      
+      assert.equal(result.length, 33); //directories
       assert.equal(result[0].volume, undefined);
       done();
     });
@@ -188,7 +179,7 @@ describe('mpd socket', function() {
     });
   });
 
-  it('should be able to handle multiple commands', function(done) {
+  it('should be able to handle subesquent commands', function(done) {
     simulate('status', 'status', 100);
     simulate('listall');
 
@@ -212,9 +203,25 @@ describe('mpd socket', function() {
     socket.send('listall', function(err, res) {
       //console.log('hello 2: listall');
 
-      assert.equal(221, res.length);
+      assert.equal(res.length, 33);
 
       isDone();
+    });
+  });
+
+   it('handles an error', function(done) {
+    simulate('search', 'songdoesnotexist');
+
+    socket = new mpdSocket('localhost', port);
+
+    socket.send('search artist skrillex', function(err, result) {
+      
+      //console.log(err);
+      assert.ok(err);
+      assert.isNull(result);
+      assert.property(err, 'code');
+
+      done();
     });
   });
 

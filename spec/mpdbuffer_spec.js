@@ -18,10 +18,7 @@ describe('mpd buffer', function() {
   beforeEach(function() {
     //reset the simulations
     simulations = {};
-
-
   });
-
 
   before(function() {
     server = null;
@@ -140,7 +137,7 @@ describe('mpd buffer', function() {
     });
 
     buffer.on('error', function(err) {
-      assert.equal('unknown command "js"', err);
+      assert.equal('ACK [5@0] {} unknown command "js"', err);
       done();
     });
   });

@@ -11,6 +11,8 @@
 
 var net = require('net');
 var sys = require('sys');
+var mpdBuffer = require('./lib/mpdbuffer');
+var mpdParser = require('./lib/mpdparser');
 
 function mpdSocket(host, port) {
   this.host = host || "localhost";
@@ -34,7 +36,7 @@ mpdSocket.prototype = {
   data: "",
   response: {},
   responses: [],
-  waiting: false,
+  waiting: false, //used to wait for a response, to ensure callbacks are called in the same order.
 
   handleData: function(datum) {
     this.data += datum;
@@ -58,7 +60,7 @@ mpdSocket.prototype = {
       } else if (line.match(/^OK MPD/)) {
         this.version = lines[l].split(' ')[2];
       } else if (line.match(/^OK/)) {
-      	//end of a message stream;
+        //end of a message stream;
 
         //if objects are being returned or the current response being built has a 'file' property.
         if (this.responses.length > 0 || this.response.hasOwnProperty('file')) {
@@ -80,7 +82,7 @@ mpdSocket.prototype = {
         //change the state of the connection
         this.waiting = false;
       } else {
-      	//build the objects
+        //build the objects
         // Matches 'key: val' or 'val'
         match = line.match(/^(?:(.*?):)?\s*(.*?)\s*$/)
         var key = match[1];
@@ -111,6 +113,12 @@ mpdSocket.prototype = {
     }
   },
 
+  handleBufferedMessage: function(buffer) {
+    var cb = this.callbacks.shift();
+    var parsedMessage = mpdParser.parse(cb.command, buffer);
+    cb.callback(null, parsedMessage);
+  },
+
   on: function(event, fn) {
     this.socket.on(event, fn);
   },
@@ -123,10 +131,31 @@ mpdSocket.prototype = {
       this.socket.addListener('connect', function() {
         self.isOpen = true;
       });
-      this.socket.addListener('data', function(data) {
-        self.handleData.call(self, data);
+
+      var buffer = mpdBuffer.connect(this.socket);
+
+      buffer.on('message', function(message) {
+        self.handleBufferedMessage.call(self, message);
         self._send();
       });
+
+      buffer.on('error', function(err) {
+        var error = mpdParser.parseError(err);
+        var cb = self.callbacks.shift();
+        self.waiting = false;
+        cb.callback(error, null);
+      });
+
+      buffer.on('ready', function(version) {
+        self.waiting = false;
+        self.version = version;
+      });
+
+
+      // this.socket.addListener('data', function(data) {
+      //   self.handleData.call(self, data);
+      //   self._send();
+      // });
       this.socket.addListener('end', function() {
         self.isOpen = false;
       });
