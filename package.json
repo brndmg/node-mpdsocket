@@ -18,5 +18,8 @@
   "devDependencies": {
     "chai": "^1.9.0",
     "mocha": "^1.18.2"
+  },
+  "dependencies": {
+    "eversocket": "0.0.3"
   }
 }

@@ -37,11 +37,15 @@ describe('mpd socket', function() {
           //console.log('received: %s', command);
           if (simulations[command]) {
             var sleep = simulations[command].sleep;
-            var response = simulations[command].data; 
+            var response = simulations[command].data;
             //console.log(response);
 
             setTimeout(function() {
-              s.write(response);
+              try {
+                s.write(response);
+              } catch (e) {
+                console.log('ERROR: timeout for: %s', command);
+              }
             }, sleep);
           }
         }
@@ -97,14 +101,25 @@ describe('mpd socket', function() {
 
     socket = new mpdSocket('localhost', port);
 
-    socket.send('status', function(err, res) {
-      assert.equal(res.volume, '60');
-      assert.equal(res.consume, '0');
+    socket.once('connect', function() {
+      console.log('connect - client');
+      socket.send('status', function(err, res) {
+        assert.equal(res.volume, '60');
+        assert.equal(res.consume, '0');
 
-      res.volume = 'sipper';
+        done();
+      });
 
-      done();
     });
+
+    // socket.send('status', function(err, res) {
+    //   assert.equal(res.volume, '60');
+    //   assert.equal(res.consume, '0');
+
+    //   res.volume = 'sipper';
+
+    //   done();
+    // });
   });
 
   it('should be able to get a playlist with a single song', function(done) {
@@ -156,9 +171,11 @@ describe('mpd socket', function() {
 
     socket = new mpdSocket('localhost', port);
 
+    console.log(socket.version);
+
     socket.send('listall', function(err, result) {
       if (err) console.log(err);
-      
+
       assert.equal(result.length, 33); //directories
       assert.equal(result[0].volume, undefined);
       done();
@@ -209,13 +226,13 @@ describe('mpd socket', function() {
     });
   });
 
-   it('handles an error', function(done) {
+  it('handles an error', function(done) {
     simulate('search', 'songdoesnotexist');
 
     socket = new mpdSocket('localhost', port);
 
     socket.send('search artist skrillex', function(err, result) {
-      
+
       //console.log(err);
       assert.ok(err);
       assert.isNull(result);
@@ -223,6 +240,65 @@ describe('mpd socket', function() {
 
       done();
     });
+  });
+
+  it('reconnects if disconnected', function(done) {
+
+    socket = new mpdSocket('localhost', port);
+
+    server.once('connection', function() {
+      setTimeout(function() {
+        server.once('connection', function() {
+
+          done()
+        });
+        socket.destroy();
+      }, 10);
+    });
+  });
+
+  it('cleans up orphan callbacks upon reconnection', function(done) {
+    simulate('search', 'songdoesnotexist', 20);
+
+    socket = new mpdSocket('localhost', port);
+
+    server.once('connection', function() {
+
+      setTimeout(function() {
+        server.once('connection', function() {
+
+          assert.equal(socket.commands.length, socket.callbacks.length);
+
+          done()
+        });
+        socket.destroy();
+      }, 10);
+      socket.send('search artist skrillex');
+    });
+  });
+
+  it('continues to function after reconnection', function(done) {
+    simulate('search', 'search');
+
+    socket = new mpdSocket('localhost', port);
+
+    server.once('connection', function() {
+
+      setTimeout(function() {
+        server.once('connection', function() {
+
+          socket.send('search artist skrillex', function(err, res) {
+            console.log(res);
+            done()
+          });
+
+
+        });
+        socket.destroy();
+      }, 10);
+      //socket.send('search artist skrillex');
+    });
+
   });
 
 });

@@ -13,12 +13,23 @@ var net = require('net');
 var sys = require('sys');
 var mpdBuffer = require('./lib/mpdbuffer');
 var mpdParser = require('./lib/mpdparser');
+var EverSocket = require('eversocket').EverSocket;
+var crypto = require('crypto');
 
 function mpdSocket(host, port) {
   this.host = host || "localhost";
   this.port = port || 6600;
 
-  this.open(this.host, this.port);
+  log('constructor: opening');
+
+  var self = this;
+
+  // process.nextTick(function() {
+  //   log('next tick');
+  //   self.open(self.host, self.port);
+  // });
+
+  self.open(self.host, self.port);
 }
 
 var log = function() {
@@ -33,85 +44,11 @@ mpdSocket.prototype = {
   version: "0",
   host: null,
   port: null,
-  data: "",
-  response: {},
-  responses: [],
+  buffer: null,
+
   waiting: false, //used to wait for a response, to ensure callbacks are called in the same order.
-
-  handleData: function(datum) {
-    this.data += datum;
-    lines = this.data.split("\n");
-    this.responses = [];
-    this.response = {};
-
-    // Put back whatever's after the final \n for next time
-    this.data = lines.pop();
-    if (this.data.length > 0) log('DATA: %s', this.data);
-
-    var match;
-    for (var l in lines) {
-      var line = lines[l];
-
-      log("LINE[%s of %s]: %s", 1 + parseInt(l), lines.length, line);
-
-      if (match = line.match(/^ACK\s+\[.*?\](?:\s+\{.*?\})?\s+(.*)/)) {
-        this.waiting = false;
-        this.callbacks.shift().callback(match[1], null);
-      } else if (line.match(/^OK MPD/)) {
-        this.version = lines[l].split(' ')[2];
-      } else if (line.match(/^OK/)) {
-        //end of a message stream;
-
-        //if objects are being returned or the current response being built has a 'file' property.
-        if (this.responses.length > 0 || this.response.hasOwnProperty('file')) {
-
-          //handle multiple object response
-          if (typeof(this.response) == 'string' || Object.keys(this.response).length > 0) {
-            this.responses.push(this.response);
-          }
-
-          //handle multiple objects
-          cb = this.callbacks.shift();
-          cb.callback(null, this.responses);
-        } else {
-          //handle single objects
-          cb = this.callbacks.shift()
-          cb.callback(null, this.response);
-        }
-
-        //change the state of the connection
-        this.waiting = false;
-      } else {
-        //build the objects
-        // Matches 'key: val' or 'val'
-        match = line.match(/^(?:(.*?):)?\s*(.*?)\s*$/)
-        var key = match[1];
-        var value = match[2];
-
-        // New response if old response was a string or had this key defined already
-        if (typeof(this.response) == 'string' || typeof(this.response[key]) != 'undefined') {
-          this.responses.push(this.response);
-          this.response = {};
-        }
-
-        if (typeof(key) == 'undefined') {
-          this.response = value;
-        } else if (key == 'directory') {
-          //push the old entry if it is not empty
-          if (Object.keys(this.response).length > 0) {
-            this.responses.push(this.response);
-            this.response = {};
-          }
-          this.response[key] = value;
-          //push the directory entry
-          this.responses.push(this.response);
-          this.response = {};
-        } else {
-          this.response[key] = value;
-        }
-      }
-    }
-  },
+  connecting: false,
+  lastCommandId: undefined,
 
   handleBufferedMessage: function(buffer) {
     var cb = this.callbacks.shift();
@@ -123,73 +60,142 @@ mpdSocket.prototype = {
     this.socket.on(event, fn);
   },
 
+  once: function(event, fn) {
+    this.socket.once(event, fn);
+  },
+
   open: function(host, port) {
     var self = this;
-    if (!(this.isOpen)) {
-      this.socket = net.createConnection(port, host);
-      this.socket.setEncoding('UTF-8');
-      this.socket.addListener('connect', function() {
-        self.isOpen = true;
+    if (!(this.isOpen) && !(this.connecting)) {
+      self.connecting = true;
+      log('opening connection');
+      this.socket = new EverSocket({
+        type: 'tcp4',
+        reconnectOnTimeout: true,
+        reconnectWait: 1000
       });
 
-      var buffer = mpdBuffer.connect(this.socket);
+      //this.socket = net.createConnection(port, host);
+      //this.socket.setEncoding('UTF-8');
+      // this.socket.addListener('connect', function() {
 
-      buffer.on('message', function(message) {
+      //   self.isOpen = true;
+      //   log('connected: %s', self.isOpen);
+      // });
+
+      self.buffer = mpdBuffer.connect(this.socket);
+
+      self.buffer.on('message', function(message) {
         self.handleBufferedMessage.call(self, message);
-        self._send();
+        self._send(); //send the next one.
       });
 
-      buffer.on('error', function(err) {
+      self.buffer.on('error', function(err) {
         var error = mpdParser.parseError(err);
         var cb = self.callbacks.shift();
         self.waiting = false;
         cb.callback(error, null);
       });
 
-      buffer.on('ready', function(version) {
+      self.buffer.on('ready', function(version) {
         self.waiting = false;
         self.version = version;
       });
 
 
-      // this.socket.addListener('data', function(data) {
-      //   self.handleData.call(self, data);
-      //   self._send();
-      // });
-      this.socket.addListener('end', function() {
+      self.socket.addListener('end', function() {
+        log('disconnected - internal');
         self.isOpen = false;
       });
+
+      self.socket.on('close', function() {
+        self.isOpen = false;
+        log('closed - internal');
+      });
+
+      self.socket.on('reconnect', function() {
+        log('reconnected - internal');
+        //flush the corresponding callback
+        if (self.commands.length !== self.callbacks.length) {
+          var elementPos = self.callbacks.map(function(x) {
+            return x.id;
+          }).indexOf(self.lastCommandId);
+          log('removing stale callback');
+          self.callbacks.splice(elementPos, 1)
+        }
+        self.isOpen = true;
+      });
+
+      self.socket.on('timeout', function() {
+        self.isOpen = false;
+        log('timeout - internal');
+      });
+
+
+      log('connecting - internal');
+      self.socket.connect(this.port, this.host, function() {
+        log('connected - internal');
+        self.isOpen = true;
+        self.connecting = false;
+      });
+
+
     }
   },
 
   _send: function() {
     var self = this;
     if (self.waiting) {
+      log('waiting');
       setTimeout(function() {
         self._send()
       }, 100); //try again after a few ms.
     } else {
-      if (self.commands.length != 0) self.socket.write(self.commands.shift() + "\n");
-      self.waiting = true;
+      if (self.commands.length != 0) {
+        log('sending command');
+        var command = self.commands.shift();
+        self.lastCommandId = command.id;
+        self.socket.write(command.req + "\n");
+        self.waiting = true;
+      }
     }
 
   },
 
   send: function(req, callback) {
-    if (this.isOpen) {
+    callback = callback || (function() {
+      log('dummy');
+    });
+
+    log('send: %s', this.isOpen);
+    if (this.isOpen || this.connecting || this.waiting) {
+      var id = crypto.randomBytes(20).toString('hex');
       this.callbacks.push({
         'command': req,
-        'callback': callback
+        'callback': callback,
+        'id': id
       });
-      this.commands.push(req);
+      this.commands.push({
+        'req': req,
+        'id': id
+      });
       if (this.commands.length == 1) this._send();
     } else {
       var self = this;
       this.open(this.host, this.port);
-      this.on('connect', function() {
+      this.once('connect', function() {
+        self.isOpen = true;
         self.send(req, callback);
       });
     }
+  },
+
+  destroy: function() {
+    this.socket.destroy();
+  },
+
+  cancel: function() {
+    this.socket.cancel();
   }
 }
 
