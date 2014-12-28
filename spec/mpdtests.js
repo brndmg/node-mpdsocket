@@ -76,229 +76,284 @@ describe('mpd socket', function() {
     };
   }
 
-  it('should connect and get the version number', function(done) {
-    var serverConnected = false;
-    var clientConnected = false;
-    server.on('connection', function(s) {
-      serverConnected = true;
+  describe('general', function() {
+
+    it('should connect and get the version number', function(done) {
+      var serverConnected = false;
+      var clientConnected = false;
+      server.on('connection', function(s) {
+        serverConnected = true;
+      });
+
+      socket = new mpdSocket('localhost', port);
+      socket.on('connect', function() {
+        clientConnected = true;
+      });
+
+      setTimeout(function() {
+        assert.isTrue(serverConnected);
+        assert.isTrue(clientConnected);
+        assert.equal(socket.version, '0.17.0');
+        done();
+      }, 10);
     });
 
-    socket = new mpdSocket('localhost', port);
-    socket.on('connect', function() {
-      clientConnected = true;
+    it('should be able to fetch status', function(done) {
+      simulate('status');
+
+      socket = new mpdSocket('localhost', port);
+
+      socket.once('connect', function() {
+        console.log('connect - client');
+        socket.send('status', function(err, res) {
+          assert.equal(res.volume, '60');
+          assert.equal(res.consume, '0');
+
+          done();
+        });
+
+      });
+
+      // socket.send('status', function(err, res) {
+      //   assert.equal(res.volume, '60');
+      //   assert.equal(res.consume, '0');
+
+      //   res.volume = 'sipper';
+
+      //   done();
+      // });
     });
 
-    setTimeout(function() {
-      assert.isTrue(serverConnected);
-      assert.isTrue(clientConnected);
-      assert.equal(socket.version, '0.17.0');
-      done();
-    }, 10);
-  });
+    it('should be able to get a playlist with a single song', function(done) {
+      simulate('playlistinfo', 'playlistinfo_onesong');
 
-  it('should be able to fetch status', function(done) {
-    simulate('status');
+      socket = new mpdSocket('localhost', port);
 
-    socket = new mpdSocket('localhost', port);
+      socket.send('playlistinfo', function(err, result) {
+        if (err) console.log(err);
 
-    socket.once('connect', function() {
-      console.log('connect - client');
-      socket.send('status', function(err, res) {
-        assert.equal(res.volume, '60');
-        assert.equal(res.consume, '0');
+        //console.log(result);
+        assert.equal(result.length, 1);
+        assert.equal(result[0].volume, undefined);
+        done();
+      });
+    });
 
+    it('should be able to get the playlist', function(done) {
+      simulate('playlistinfo');
+
+      socket = new mpdSocket('localhost', port);
+
+      socket.send('playlistinfo', function(err, result) {
+        if (err) console.log(err);
+
+        assert.equal(result.length, 2);
+        assert.equal(result[0].volume, undefined);
+        done();
+      });
+    });
+
+    it('can get an empty playlist', function(done) {
+      simulate('playlistinfo', 'noresults');
+
+      socket = new mpdSocket('localhost', port);
+
+      socket.send('playlistinfo', function(err, result) {
+        if (err) console.log(err);
+
+        assert.isArray(result, 'result is not an array');
+        assert.equal(result.length, 0);
         done();
       });
 
     });
 
-    // socket.send('status', function(err, res) {
-    //   assert.equal(res.volume, '60');
-    //   assert.equal(res.consume, '0');
+    it('should be able to listall', function(done) {
+      simulate('listall');
 
-    //   res.volume = 'sipper';
+      socket = new mpdSocket('localhost', port);
 
-    //   done();
-    // });
-  });
+      //console.log(socket.version);
 
-  it('should be able to get a playlist with a single song', function(done) {
-    simulate('playlistinfo', 'playlistinfo_onesong');
+      socket.send('listall', function(err, result) {
+        if (err) console.log(err);
 
-    socket = new mpdSocket('localhost', port);
-
-    socket.send('playlistinfo', function(err, result) {
-      if (err) console.log(err);
-
-      //console.log(result);
-      assert.equal(result.length, 1);
-      assert.equal(result[0].volume, undefined);
-      done();
-    });
-  });
-
-  it('should be able to get the playlist', function(done) {
-    simulate('playlistinfo');
-
-    socket = new mpdSocket('localhost', port);
-
-    socket.send('playlistinfo', function(err, result) {
-      if (err) console.log(err);
-
-      assert.equal(result.length, 2);
-      assert.equal(result[0].volume, undefined);
-      done();
-    });
-  });
-
-  it('can get an empty playlist', function(done) {
-    simulate('playlistinfo', 'noresults');
-
-    socket = new mpdSocket('localhost', port);
-
-    socket.send('playlistinfo', function(err, result) {
-      if (err) console.log(err);
-
-      assert.isArray(result, 'result is not an array');
-      assert.equal(result.length, 0);
-      done();
-    });
-
-  });
-
-  it('should be able to listall', function(done) {
-    simulate('listall');
-
-    socket = new mpdSocket('localhost', port);
-
-    console.log(socket.version);
-
-    socket.send('listall', function(err, result) {
-      if (err) console.log(err);
-
-      assert.equal(result.length, 33); //directories
-      assert.equal(result[0].volume, undefined);
-      done();
-    });
-  });
-
-  it('should be able to search', function(done) {
-    simulate('search');
-
-    socket = new mpdSocket('localhost', port);
-
-    socket.send('search artist skrillex', function(err, result) {
-      if (err) console.log(err);
-
-      assert.equal(result.length, 33);
-      assert.equal(result[0].volume, undefined);
-      done();
-    });
-  });
-
-  it('should be able to handle subesquent commands', function(done) {
-    simulate('status', 'status', 100);
-    simulate('listall');
-
-    socket = new mpdSocket('localhost', port);
-
-    var count = 0;
-
-    isDone = function() {
-      count += 1;
-      if (count >= 2)
+        assert.equal(result.length, 33); //directories
+        assert.equal(result[0].volume, undefined);
         done();
-    };
-
-    socket.send('status', function(err, res) {
-      //console.log('hello 1: status');
-      assert.property(res, 'volume');
-
-      isDone();
+      });
     });
 
-    socket.send('listall', function(err, res) {
-      //console.log('hello 2: listall');
+    it('should be able to search', function(done) {
+      simulate('search');
 
-      assert.equal(res.length, 33);
+      socket = new mpdSocket('localhost', port);
 
-      isDone();
+      socket.send('search artist skrillex', function(err, result) {
+        if (err) console.log(err);
+
+        assert.equal(result.length, 33);
+        assert.equal(result[0].volume, undefined);
+        done();
+      });
     });
+
   });
 
-  it('handles an error', function(done) {
-    simulate('search', 'songdoesnotexist');
 
-    socket = new mpdSocket('localhost', port);
+  describe('non-happy path', function() {
+    it('should be able to handle subsequent commands in order', function(done) {
+      simulate('status', 'status', 200);
+      simulate('listall');
 
-    socket.send('search artist skrillex', function(err, result) {
+      socket = new mpdSocket('localhost', port);
 
-      //console.log(err);
-      assert.ok(err);
-      assert.isNull(result);
-      assert.property(err, 'code');
+      var count = 0;
 
-      done();
-    });
-  });
+      isDone = function() {
+        count += 1;
+        if (count >= 2)
+          done();
+      };
 
-  it('reconnects if disconnected', function(done) {
-
-    socket = new mpdSocket('localhost', port);
-
-    server.once('connection', function() {
-      setTimeout(function() {
-        server.once('connection', function() {
-
-          done()
+      socket.once('connect', function() {
+        socket.send('status', function(err, res) {
+          if (err) console.log(err);
+          assert.property(res, 'volume');
+          isDone();
         });
-        socket.destroy();
-      }, 10);
-    });
-  });
 
-  it('cleans up orphan callbacks upon reconnection', function(done) {
-    simulate('search', 'songdoesnotexist', 20);
-
-    socket = new mpdSocket('localhost', port);
-
-    server.once('connection', function() {
-
-      setTimeout(function() {
-        server.once('connection', function() {
-
-          assert.equal(socket.commands.length, socket.callbacks.length);
-
-          done()
+        socket.send('listall', function(err, res) {
+          if (err) console.log(err);
+          assert.equal(res.length, 33);
+          isDone();
         });
-        socket.destroy();
-      }, 10);
-      socket.send('search artist skrillex');
+      });
+    });
+
+    it('handles an error', function(done) {
+      simulate('search', 'songdoesnotexist');
+
+      socket = new mpdSocket('localhost', port);
+
+      socket.send('search artist skrillex', function(err, result) {
+
+        //console.log(err);
+        assert.ok(err);
+        assert.isNull(result);
+        assert.property(err, 'code');
+
+        done();
+      });
     });
   });
 
-  it('continues to function after reconnection', function(done) {
-    simulate('search', 'search');
 
-    socket = new mpdSocket('localhost', port);
+  describe('reconnection', function() {
+    it('reconnects if disconnected', function(done) {
 
-    server.once('connection', function() {
+      socket = new mpdSocket('localhost', port);
 
-      setTimeout(function() {
-        server.once('connection', function() {
+      server.once('connection', function() {
+        setTimeout(function() {
+          server.once('connection', function() {
 
-          socket.send('search artist skrillex', function(err, res) {
-            console.log(res);
             done()
           });
+          socket.destroy();
+        }, 10);
+      });
+    });
 
+    it('cleans up orphan callbacks upon reconnection', function(done) {
+      simulate('search', 'songdoesnotexist', 20);
 
-        });
-        socket.destroy();
-      }, 10);
-      //socket.send('search artist skrillex');
+      socket = new mpdSocket('localhost', port);
+
+      server.once('connection', function() {
+
+        setTimeout(function() {
+          server.once('connection', function() {
+
+            assert.equal(socket.commands.length, socket.callbacks.length);
+
+            done()
+          });
+          socket.destroy();
+        }, 10);
+        socket.send('search artist skrillex');
+      });
+    });
+
+    it('continues to function after reconnection', function(done) {
+      simulate('search', 'search');
+
+      socket = new mpdSocket('localhost', port);
+
+      server.once('connection', function() {
+
+        setTimeout(function() {
+          server.once('connection', function() {
+
+            socket.send('search artist skrillex', function(err, res) {
+
+              assert.isArray(res);
+              assert.equal(res.length, 33);
+              console.log('got result: %s', res.length);
+              done()
+            });
+          });
+          socket.destroy();
+        }, 10);
+        socket.send('search artist barney');
+      });
+    });
+
+    it('has a rety attempts / or timeout amount then returns an error response', function(done) {
+      simulate('status', 'status', 550);
+      simulate('listall', 'listall', 1000);
+      this.timeout(3000);
+
+      socket = new mpdSocket('localhost', port, {debug: true});
+
+      var count = 0;
+
+      isDone = function() {
+        count += 1;
+        if (count >= 2)
+          done();
+      };
+
+      socket.send('status', function(err, res) {
+        if (err) console.log(err);
+        //max retries
+        assert.isNull(res);
+        assert.isNotNull(err);
+        isDone();
+      });
+
+      //continues to process.
+      socket.send('listall', function(err, res) {
+        if (err) console.log(err);
+
+        assert.equal(res.length, 33);
+        isDone();
+      });
     });
 
   });
+
+
+
+
+  it('flushes the commands and callbacks when the max retries is hit');
+
+  it('creates multiple connections (pool) so commands do not have to wait');
+
+  it('should have a max retries before extending the wait time using some algorithm');
+
+
+
+
 
 });

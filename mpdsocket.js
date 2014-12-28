@@ -16,24 +16,27 @@ var mpdParser = require('./lib/mpdparser');
 var EverSocket = require('eversocket').EverSocket;
 var crypto = require('crypto');
 
-function mpdSocket(host, port) {
+var isDebugMode = false;
+
+function mpdSocket(host, port, options) {
+  var self = this;
   this.host = host || "localhost";
   this.port = port || 6600;
 
+  var options = options || {};
+  isDebugMode = options.debug || false;
+
+  this.maxRetryAttempts = options.maxRetryAttempts || this.maxRetryAttempts;
+  this.reconnectWaitTime = options.reconnectWaitTime || this.reconnectWaitTime;
+
   log('constructor: opening');
-
-  var self = this;
-
-  // process.nextTick(function() {
-  //   log('next tick');
-  //   self.open(self.host, self.port);
-  // });
 
   self.open(self.host, self.port);
 }
 
 var log = function() {
-  //console.log.apply(this, Array.prototype.slice.call(arguments) );
+  if (isDebugMode)
+    console.log.apply(this, Array.prototype.slice.call(arguments));
 };
 
 mpdSocket.prototype = {
@@ -50,10 +53,25 @@ mpdSocket.prototype = {
   connecting: false,
   lastCommandId: undefined,
 
+  waitingTime: 100,
+  reconnectWaitTime: 1000,
+  maxRetryAttempts: 5,
+  retryAttempt: 0,
+
+
   handleBufferedMessage: function(buffer) {
     var cb = this.callbacks.shift();
     var parsedMessage = mpdParser.parse(cb.command, buffer);
+    log('handling callback for: %s', cb.command);
     cb.callback(null, parsedMessage);
+    this.waiting = false;
+  },
+
+  handleErrorResult: function(err) {
+    var cb = this.callbacks.shift();
+    cb.callback(new Error(err), null);
+    this.socket.destroy();
+    this.waiting = false;
   },
 
   on: function(event, fn) {
@@ -72,48 +90,43 @@ mpdSocket.prototype = {
       this.socket = new EverSocket({
         type: 'tcp4',
         reconnectOnTimeout: true,
-        reconnectWait: 1000
+        reconnectWait: self.reconnectWaitTime
       });
-
-      //this.socket = net.createConnection(port, host);
-      //this.socket.setEncoding('UTF-8');
-      // this.socket.addListener('connect', function() {
-
-      //   self.isOpen = true;
-      //   log('connected: %s', self.isOpen);
-      // });
 
       self.buffer = mpdBuffer.connect(this.socket);
 
       self.buffer.on('message', function(message) {
+        log("handling message: %s lines", message.length);
         self.handleBufferedMessage.call(self, message);
         self._send(); //send the next one.
       });
 
       self.buffer.on('error', function(err) {
+        //handles error messages from MPD.
         var error = mpdParser.parseError(err);
         var cb = self.callbacks.shift();
-        self.waiting = false;
         cb.callback(error, null);
       });
 
       self.buffer.on('ready', function(version) {
-        self.waiting = false;
+        //this event is emitted when the buffer recieves
+        // the version from the mpd service, when a connection is made.
         self.version = version;
       });
 
-
+      //** SOCKET EVENTS **//
       self.socket.addListener('end', function() {
         log('disconnected - internal');
         self.isOpen = false;
       });
 
-      self.socket.on('close', function() {
+      self.socket.addListener('close', function() {
         self.isOpen = false;
+        self.waiting = true;
         log('closed - internal');
       });
 
-      self.socket.on('reconnect', function() {
+      self.socket.addListener('reconnect', function() {
         log('reconnected - internal');
         //flush the corresponding callback
         if (self.commands.length !== self.callbacks.length) {
@@ -124,67 +137,88 @@ mpdSocket.prototype = {
           self.callbacks.splice(elementPos, 1)
         }
         self.isOpen = true;
+        self.waiting = false;
+        self._send();
       });
 
-      self.socket.on('timeout', function() {
+      self.socket.addListener('timeout', function() {
         self.isOpen = false;
         log('timeout - internal');
       });
 
 
+      //Connect!
       log('connecting - internal');
       self.socket.connect(this.port, this.host, function() {
         log('connected - internal');
         self.isOpen = true;
         self.connecting = false;
       });
-
-
     }
   },
 
   _send: function() {
     var self = this;
     if (self.waiting) {
-      log('waiting');
-      setTimeout(function() {
-        self._send()
-      }, 100); //try again after a few ms.
+      if (self.retryAttempt >= self.maxRetryAttempts) {
+        log('ERROR: maxRetryAttempts reached: %s', self.retryAttempt);
+        self.handleErrorResult('maxRetryAttempts: ' + self.retryAttempt);
+      } else {
+        log('waiting for previous results. retry(%s)', self.retryAttempt);
+        setTimeout(function() {
+          self.retryAttempt++;
+          self._send()
+        }, self.waitingTime); //try again after a few ms.
+      }
     } else {
       if (self.commands.length != 0) {
-        log('sending command');
         var command = self.commands.shift();
         self.lastCommandId = command.id;
-        self.socket.write(command.req + "\n");
+        log('writing command: %s', command.cmd);
+        self.socket.write(command.cmd + "\n");
         self.waiting = true;
+        self.retryAttempt = 0;
       }
     }
 
   },
 
+  connectionIsReady: function() {
+    return this.isOpen || this.connecting || this.waiting;
+  },
+
+  clearQueue: function() {
+    this.callbacks.length = 0;
+    this.commands.length = 0;
+  },
+
+  enqueueRequest: function(req, callback) {
+    log('enqueing: %s', req);
+    var id = crypto.randomBytes(20).toString('hex');
+    this.callbacks.push({
+      'command': req,
+      'callback': callback,
+      'id': id
+    });
+    this.commands.push({
+      'cmd': req,
+      'id': id
+    });
+  },
+
   send: function(req, callback) {
     callback = callback || (function() {
-      log('dummy');
+      log('dummy callback');
     });
 
-    log('send: %s', this.isOpen);
-    if (this.isOpen || this.connecting || this.waiting) {
-      var id = crypto.randomBytes(20).toString('hex');
-      this.callbacks.push({
-        'command': req,
-        'callback': callback,
-        'id': id
-      });
-      this.commands.push({
-        'req': req,
-        'id': id
-      });
+    if (this.connectionIsReady()) {
+      this.enqueueRequest(req, callback);
       if (this.commands.length == 1) this._send();
     } else {
       var self = this;
       this.open(this.host, this.port);
       this.once('connect', function() {
-        self.isOpen = true;
+        log('send - connected');
         self.send(req, callback);
       });
     }
