@@ -104,7 +104,7 @@ describe('mpd socket', function() {
       socket = new mpdSocket('localhost', port);
 
       socket.once('connect', function() {
-        console.log('connect - client');
+        //console.log('connect - client');
         socket.send('status', function(err, res) {
           assert.equal(res.volume, '60');
           assert.equal(res.consume, '0');
@@ -314,7 +314,7 @@ describe('mpd socket', function() {
       simulate('listall', 'listall', 1000);
       this.timeout(3000);
 
-      socket = new mpdSocket('localhost', port, {debug: true});
+      socket = new mpdSocket('localhost', port, {debug: true, maxRetryAttempts: 5});
 
       var count = 0;
 
@@ -344,15 +344,13 @@ describe('mpd socket', function() {
   });
 
 
-
-
   it('flushes the commands and callbacks when the max retries is hit');
 
   it('creates multiple connections (pool) so commands do not have to wait');
 
   it('should have a max retries before extending the wait time using some algorithm');
 
-
+  it('can handle command lists for multiple commands with one send');
 
 
 

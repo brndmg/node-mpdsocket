@@ -55,7 +55,7 @@ mpdSocket.prototype = {
 
   waitingTime: 100,
   reconnectWaitTime: 1000,
-  maxRetryAttempts: 5,
+  maxRetryAttempts: 0,
   retryAttempt: 0,
 
 
@@ -160,7 +160,7 @@ mpdSocket.prototype = {
   _send: function() {
     var self = this;
     if (self.waiting) {
-      if (self.retryAttempt >= self.maxRetryAttempts) {
+      if (self.retryAttempt >= self.maxRetryAttempts && self.maxRetryAttempts !== 0) {
         log('ERROR: maxRetryAttempts reached: %s', self.retryAttempt);
         self.handleErrorResult('maxRetryAttempts: ' + self.retryAttempt);
       } else {

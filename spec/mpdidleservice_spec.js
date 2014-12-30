@@ -10,6 +10,7 @@ var assert = require('assert'),
     it('connects to mpd and listens for idle events');
     it('emits events for mpd idle events');
     it('maintains a resilient connection');
+    it('can publish to pubsub');
     
   });
   

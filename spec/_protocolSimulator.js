@@ -21,6 +21,7 @@ function readFile(file, contents) {
 
   results[key] = contents;
   results[key.replace("_", " ")] = contents;
+  //console.log('loaded: %s', key);
 }
 
 module.exports = results;

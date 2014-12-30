@@ -153,13 +153,13 @@ describe('mpd buffer', function() {
 
     buffer.on('message', function(message) {
       assert.isArray(message);
-      assert.equal(11, message.length);
+      assert.equal(message.length, 10);
       done();
     });
   });
 
   it('can buffer partial status', function(done) {
-    simulate('partialstatus')
+    simulate('partialstatus');
 
     var client = net.connect({
         port: port
@@ -168,9 +168,29 @@ describe('mpd buffer', function() {
 
     buffer.on('message', function(message) {
       assert.isArray(message);
-      assert.equal(17, message.length);
+      assert.equal(message.length, 16);
       done();
     });
+  });
+
+  it('can buffer broken mid line stream', function(done) {
+    simulate('lineending');
+
+    var client = net.connect({
+        port: port
+      }),
+      buffer = mpdBuffer.connect(client);
+
+    buffer.on('message', function(message) {
+      //console.log(message)
+      assert.isArray(message);
+      assert.equal(2, message.length);
+
+      assert.equal(message[0], '0:file: Skrillex/Skrillex - Weekends!!! (feat. Sirah)/01 Weekends!!!.mp3')
+      assert.equal(message[1], '1:file: Skrillex/Kaskade & Skrillex - Lick It (Kaz James Remix)/01 Lick It (Kaz James Remix).mp3')
+      done();
+    });
+
   });
 
 });
