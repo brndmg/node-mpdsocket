@@ -35,8 +35,10 @@ function mpdSocket(host, port, options) {
 }
 
 var log = function() {
-  if (isDebugMode)
+  if (isDebugMode) {
+    arguments[0] = 'mpd: ' + arguments[0];
     console.log.apply(this, Array.prototype.slice.call(arguments));
+  }
 };
 
 mpdSocket.prototype = {
@@ -111,6 +113,7 @@ mpdSocket.prototype = {
       self.buffer.on('ready', function(version) {
         //this event is emitted when the buffer recieves
         // the version from the mpd service, when a connection is made.
+        log('buffer ready');
         self.version = version;
       });
 
